@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Auction, WatchList
+from .forms import AuctionForm
 
 
 def index(request):
@@ -54,8 +55,39 @@ def saved_listings(request):
 
 
 @login_required
-def create_listing(request, listing_id):
-    return render(request, 'auctions/create-listing.html')
+def create_listing(request):
+    if request.method == "POST":
+        form = AuctionForm(request.POST)
+        if form.is_valid():
+            new_listing = form.save(commit=False)
+            new_listing.owner = request.user
+            new_listing.save()
+            return HttpResponseRedirect(reverse("show_listing", args=[new_listing.id]))
+        else:
+            return render(request, 'auctions/create-listing.html', {'form': form})
+    return render(request, 'auctions/create-listing.html', {
+        "form": AuctionForm(),
+    })
+
+
+@login_required
+def edit_listing(request, listing_id):
+    listing = Auction.objects.get(pk=listing_id)
+
+    if request.method == "POST":
+        form = AuctionForm(request.POST, instance=listing)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("show_listing", args=[listing.id]))
+        else:
+            return render(request, 'auctions/edit-listing.html', {
+                'form': form,
+                'listing': listing,
+            })
+    return render(request, 'auctions/edit-listing.html', {
+        "listing": listing,
+        'form': AuctionForm(instance=listing),
+    })
 
 
 def login_view(request):

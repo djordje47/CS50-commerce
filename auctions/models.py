@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.forms import ModelForm
 
 
 class User(AbstractUser):
@@ -20,7 +21,7 @@ class Auction(models.Model):
     bid = models.IntegerField()
     image_url = models.URLField(default='')
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category")
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL, related_name="listings")
 
     def __str__(self):
         return f"{self.id} - {self.title} - {self.category.name}"
