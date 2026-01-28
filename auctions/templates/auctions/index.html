@@ -11,11 +11,12 @@
                          style="height: 200px; object-fit: contain;">
 
                     <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-start">
                             <div class="d-flex flex-column align-items-start">
                                 <h5 class="card-title">{{ listing.title }}</h5>
+                                <a href="#">{{ listing.category.name }}</a>
                             </div>
-                            <div class="d-flex flex-row align-items-end gap-3">
+                            <div class="d-flex flex-row align-items-center gap-3">
                                 <span class="badge text-bg-primary">
                                     Starting bid: {{ listing.bid }}
                                 </span>
@@ -29,6 +30,7 @@
                             </div>
                         </div>
                         <p class="card-text">{{ listing.description }}</p>
+                        <p class="text-right">Posted by: {{ listing.owner.username.capitalize }}</p>
                         <hr>
                         <a href="{% url 'show_listing' listing_id=listing.id %}"
                            class="btn btn-primary mt-auto">Details</a>
