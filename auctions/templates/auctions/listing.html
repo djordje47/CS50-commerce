@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-md-4">
             <img src="{{ listing.image_url }}" class="img-fluid d-block mx-auto" alt="{{ listing.image }}">
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 bg-light">
             <div class="d-flex flex-row justify-content-between align-items-center">
                 <h1 class="flex">{{ listing.title }}</h1>
                 {% if user.is_authenticated %}
@@ -59,7 +59,7 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>You are not log in to bid on the auction</p>
+                    <p>You need to be logged in to place a bid</p>
                 {% endif %}
             </div>
         </div>
