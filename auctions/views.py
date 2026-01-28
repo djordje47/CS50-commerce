@@ -1,14 +1,61 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Auction, WatchList
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Auction.objects.all()
+    return render(request, "auctions/index.html", {
+        "listings": listings,
+    })
+
+
+def show_listing(request, listing_id):
+    listing = Auction.objects.get(id=listing_id)
+    watch_list = request.user.saved_listings.values_list('auction_id', flat=True)
+    return render(request, 'auctions/listing.html', {
+        "listing": listing,
+        "bids": listing.bids.all().order_by("-bid"),
+        "comments": listing.comments.all().order_by("-id"),
+        "watch_list": watch_list,
+    })
+
+
+@login_required
+def watch_listing(request, listing_id):
+    listing = Auction.objects.get(pk=listing_id)
+    watch_list = WatchList(auction=listing, user=request.user)
+    watch_list.save()
+    messages.success(request, "Listing added to watchlist successfully!")
+    return HttpResponseRedirect(reverse("show_listing", args=[listing_id]))
+
+
+@login_required
+def unwatch_listing(request, listing_id):
+    watch_list_item = WatchList.objects.filter(auction=listing_id, user=request.user)
+    watch_list_item.delete()
+    messages.success(request, "Listing removed from watchlist successfully!")
+    return HttpResponseRedirect(reverse("show_listing", args=[listing_id]))
+
+
+@login_required
+def saved_listings(request):
+    user = User.objects.get(pk=request.user.id)
+    user_saved_listings = WatchList.objects.filter(user=user).all().order_by("-id")
+    return render(request, "auctions/saved-listings.html", {
+        "saved_listings": user_saved_listings,
+    })
+
+
+@login_required
+def create_listing(request, listing_id):
+    return render(request, 'auctions/create-listing.html')
 
 
 def login_view(request):

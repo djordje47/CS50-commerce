@@ -1,3 +1,5 @@
 db.sqlite3
 .idea
 venv
+auctions/__pycache__
+__pycache__
