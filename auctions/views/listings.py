@@ -8,8 +8,15 @@ from auctions.forms import AuctionForm
 
 
 def index(request):
-    listings = Auction.objects.all()
+    listings = Auction.objects.filter(is_active=True).all()
     return render(request, "auctions/index.html", {
+        "listings": listings,
+    })
+
+
+def my_listings(request):
+    listings = request.user.listings.all()
+    return render(request, "auctions/my-listings.html", {
         "listings": listings,
     })
 

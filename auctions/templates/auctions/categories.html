@@ -1,0 +1,23 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %}
+    Auctions - Categories
+{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <h1 class="mb-4">Listing Categories</h1>
+            <ul class="list-group">
+                {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <a href="{% url 'category_listings' category_id=category.id %}">
+                            {{ category.name }}
+                        </a>
+                        <span class="badge text-bg-success">{{ category.listings.all|length }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

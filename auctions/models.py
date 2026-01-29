@@ -20,7 +20,7 @@ class Auction(models.Model):
     is_active = models.BooleanField(default=True)
     bid = models.IntegerField()
     image_url = models.URLField(default='')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL, related_name="listings")
 
     def __str__(self):
