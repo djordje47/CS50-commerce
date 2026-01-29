@@ -20,13 +20,9 @@
                                 <span class="badge text-bg-primary">
                                     Starting bid: {{ listing.bid }}
                                 </span>
-                                {% if not listing.bids.all %}
-                                    <span class="badge text-bg-secondary">No bids</span>
-                                {% else %}
-                                    <span class="badge text-bg-success">
+                                <span class="badge text-bg-success">
                                         Highest bid: {{ listing.get_highest_bid }}
                                     </span>
-                                {% endif %}
                             </div>
                         </div>
                         <p class="card-text">{{ listing.description }}</p>

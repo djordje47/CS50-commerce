@@ -1,9 +1,16 @@
 from django import forms
-from .models import Auction
+from .models import Auction, Bid
 
 
 class AuctionForm(forms.ModelForm):
+    """
+    Creates the form for creating a new auction.
+    """
     class Meta:
+        """
+        Django uses Meta class to define form meta attributes.
+        It must be named Meta, so Django can process it and create a form.
+        """
         model = Auction
         fields = ['title', 'description', 'image_url', 'bid', 'is_active', 'category']
         widgets = {
@@ -29,3 +36,15 @@ class AuctionForm(forms.ModelForm):
         if not data:
             return "https://shorturl.at/Tuo6N"
         return data
+
+
+class BidForm(forms.ModelForm):
+    """
+    Creates the form for bidding on the auction listing page
+    """
+    class Meta:
+        model = Bid
+        fields = ['bid']
+        widgets = {
+            'bid': forms.NumberInput(attrs={'class': 'form-control'}),
+        }

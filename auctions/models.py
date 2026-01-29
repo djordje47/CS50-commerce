@@ -28,6 +28,8 @@ class Auction(models.Model):
 
     def get_highest_bid(self):
         highest_bid = self.bids.aggregate(models.Max('bid'))
+        if not highest_bid['bid__max']:
+            return self.bid
         return highest_bid['bid__max']
 
 

@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from auctions.models import Auction
-from auctions.forms import AuctionForm
+from auctions.forms import AuctionForm, BidForm
 
 
 def index(request):
@@ -24,13 +24,16 @@ def my_listings(request):
 def show_listing(request, listing_id):
     listing = Auction.objects.get(id=listing_id)
     watch_list = []
+    bid_form = False
     if request.user.is_authenticated:
         watch_list = request.user.saved_listings.values_list('auction_id', flat=True)
+        bid_form = BidForm()
     return render(request, 'auctions/listing.html', {
         "listing": listing,
         "bids": listing.bids.all().order_by("-bid"),
         "comments": listing.comments.all().order_by("-id"),
         "watch_list": watch_list,
+        "bid_form": bid_form,
     })
 
 
