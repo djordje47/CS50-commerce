@@ -25,7 +25,7 @@ class Auction(models.Model):
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL, related_name="listings")
 
     def __str__(self):
-        return f"{self.id} - {self.title} - {self.category.name}"
+        return f"{self.id} - {self.title} - {self.bid}"
 
     def get_highest_bid_amount(self):
         current_winner_bid = self.bids.order_by('-bid').first()

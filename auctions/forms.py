@@ -1,11 +1,12 @@
 from django import forms
-from .models import Auction, Bid
+from .models import Auction, Bid, Comment
 
 
 class AuctionForm(forms.ModelForm):
     """
     Creates the form for creating a new auction.
     """
+
     class Meta:
         """
         Django uses Meta class to define form meta attributes.
@@ -42,9 +43,23 @@ class BidForm(forms.ModelForm):
     """
     Creates the form for bidding on the auction listing page
     """
+
     class Meta:
         model = Bid
         fields = ['bid']
         widgets = {
             'bid': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+
+class CommentForm(forms.ModelForm):
+    """
+    Creates the form for commenting on the auction listing page
+    """
+
+    class Meta:
+        model = Comment
+        fields = ['comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'class': 'form-control mb-3'}),
         }
