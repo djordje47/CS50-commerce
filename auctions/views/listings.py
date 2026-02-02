@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import messages
 
 from auctions.models import Auction
 from auctions.forms import AuctionForm, BidForm
@@ -71,3 +72,16 @@ def edit_listing(request, listing_id):
         "listing": listing,
         'form': AuctionForm(instance=listing),
     })
+
+
+@login_required
+def close_listing(request, listing_id):
+    listing = Auction.objects.get(pk=listing_id)
+    if listing.owner.id == request.user.id:
+        listing.is_active = False
+        listing.winner = listing.get_auction_winner()
+        listing.save()
+        return HttpResponseRedirect(reverse("show_listing", args=[listing.id]))
+    else:
+        messages.error(request, "You are not the owner of this listing.", extra_tags="danger")
+        return HttpResponseRedirect(reverse("index"))

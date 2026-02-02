@@ -21,16 +21,25 @@ class Auction(models.Model):
     bid = models.IntegerField()
     image_url = models.URLField(default='')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
+    winner = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='won_listings')
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.SET_NULL, related_name="listings")
 
     def __str__(self):
         return f"{self.id} - {self.title} - {self.category.name}"
 
-    def get_highest_bid(self):
-        highest_bid = self.bids.aggregate(models.Max('bid'))
-        if not highest_bid['bid__max']:
-            return self.bid
-        return highest_bid['bid__max']
+    def get_highest_bid_amount(self):
+        current_winner_bid = self.bids.order_by('-bid').first()
+
+        if current_winner_bid:
+            return current_winner_bid.bid
+        return self.bid
+
+    def get_auction_winner(self):
+        winning_bid = self.bids.order_by('-bid').first()
+
+        if winning_bid:
+            return winning_bid.user
+        return None
 
 
 class WatchList(models.Model):

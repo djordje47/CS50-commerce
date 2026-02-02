@@ -19,7 +19,7 @@ def create_auction_bid(request, listing_id):
     form = BidForm(request.POST)
     if form.is_valid():
         current_bid = form.cleaned_data['bid']
-        highest_bid = auction.get_highest_bid()
+        highest_bid = auction.get_highest_bid_amount()
         if not current_bid > highest_bid:
             messages.error(request, f"You can't bid lower than the highest bid: {highest_bid}", extra_tags='danger')
             return HttpResponseRedirect(reverse('show_listing', args=[listing_id]))
